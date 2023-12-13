@@ -26,6 +26,7 @@ public class NetworkClient : MonoBehaviour
     public InputField ipInput;
     public InputField nombreInput;
     public Button connectButton;
+    public Button startButton;
 
     //Canvas
     public Canvas connectCanvas;
@@ -49,8 +50,8 @@ public class NetworkClient : MonoBehaviour
         m_Connection = default(NetworkConnection);
         var endpoint = NetworkEndpoint.Parse(serverIp, serverPort);
         m_Connection = m_Driver.Connect(endpoint);
-        connectButton.enabled = false;
-        conectar = true;
+        conectar = m_Connection.IsCreated;
+        connectButton.enabled = conectar;
     }
 
     void OnDestroy()
@@ -135,8 +136,8 @@ public class NetworkClient : MonoBehaviour
                     waitingPlayer.transform.position = new Vector3(offsetLobby, 0f);
                     simulatedPlayers.Add(Instantiate(waitingPlayer, waitCanvas.transform));
                     offsetLobby += 100f;
-                    
                 }
+                startButton.gameObject.SetActive(lobbyMsg.players.Count > 1);
                 break;
             case Commands.READY:
 
@@ -147,7 +148,7 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
-    private void SendToServer(System.Object message)
+    private void SendToServer(object message)
     {
         string messageJSON = JsonUtility.ToJson(message);
         DataStreamWriter writer;
@@ -155,5 +156,19 @@ public class NetworkClient : MonoBehaviour
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(messageJSON), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
+    }
+
+    public void Disconnect()
+    {
+        m_Driver.Disconnect(m_Connection);
+        m_Driver.ScheduleUpdate().Complete();
+        m_Connection = default(NetworkConnection);
+        simulatedPlayers.ForEach(player => Destroy(player));
+        simulatedPlayers.Clear();
+        conectar = false;
+        connectButton.enabled = true;
+        serverIp = "";
+        connectCanvas.gameObject.SetActive(true);
+        waitCanvas.gameObject.SetActive(false);
     }
 }

@@ -7,11 +7,13 @@ using NetworkMessages;
 
 public class Server : MonoBehaviour
 {
+    //Connection
     public NetworkDriver m_Driver;
     public ushort serverPort;
     public NativeList<NetworkConnection> m_Connections;
     public List<NetworkObject.NetworkPlayer> m_Players;
 
+    //Private values
     private int nextId = 0;
     private bool onLobby = false;
 
@@ -94,14 +96,25 @@ public class Server : MonoBehaviour
     void OnDisconnect(int i)
     {
         m_Connections[i] = default(NetworkConnection);
+        m_Driver.Disconnect(m_Connections[i]);
         Debug.Log("Jugador " + m_Players[i].nombre + " desconectado");
+        m_Players.RemoveAt(i);
+        SendPlayerLobby();
     }
 
-    private void SendToClient(System.Object message, NetworkConnection c)
+    private void SendToClient(object message, NetworkConnection c)
     {
+        //Bottleneck might be necessary though
+        /*
+        if (!c.IsCreated)
+        {
+            return;
+        }
+        */
         string messageJSON =  JsonUtility.ToJson(message);
         DataStreamWriter writer;
         m_Driver.BeginSend(NetworkPipeline.Null, c, out writer);
+        Debug.Log(messageJSON);
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(messageJSON), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
@@ -135,20 +148,24 @@ public class Server : MonoBehaviour
 
     private void SendPlayerLobby()
     {
-        //Es posible resumir esto a un for loop pero los foreach son mas elegantes
+        //Could be summed up with a single for loop but this is more elegant
+        // TODO: turn this into a for loop
         List<NetworkObject.NetworkLobbyPlayer> lobbyPlayers = new List<NetworkObject.NetworkLobbyPlayer>();
         foreach (var player in m_Players)
         {
             var lobbyPlayer = new NetworkObject.NetworkLobbyPlayer();
             lobbyPlayer.nombre = player.nombre;
-            lobbyPlayer.colorJug = int.Parse(player.id);
+            lobbyPlayer.colorJug = m_Players.IndexOf(player);
             lobbyPlayers.Add(lobbyPlayer);
         }
         LobbyMsg lobbyMsg = new LobbyMsg();
         foreach (var connection in m_Connections)
         {
             lobbyMsg.players = lobbyPlayers;
-            SendToClient(lobbyMsg, connection);
+            if (connection.IsCreated)
+            {
+                SendToClient(lobbyMsg, connection);
+            }            
         }
         onLobby = true;
     }
