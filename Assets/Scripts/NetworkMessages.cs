@@ -16,13 +16,22 @@ namespace NetworkObject
         public Vector3 posJugador;
         public string nombre;
     }
+
+    [System.Serializable]
+    public class NetworkLobbyPlayer : NetworkObject
+    {
+        public int colorJug;
+        public string nombre;
+    }
 }
 
 namespace NetworkMessages
 {
     public enum Commands
     {
-        HANDSHAKE
+        HANDSHAKE,
+        LOBBY,
+        READY
     }
 
     [System.Serializable]
@@ -39,6 +48,28 @@ namespace NetworkMessages
         {
             command = Commands.HANDSHAKE;
             player = new NetworkObject.NetworkPlayer();
+        }
+    }
+
+    [System.Serializable]
+    public class LobbyMsg : NetworkHeader
+    {
+        public List<NetworkObject.NetworkLobbyPlayer> players;
+        public LobbyMsg()
+        {
+            command = Commands.LOBBY;
+            players = new List<NetworkObject.NetworkLobbyPlayer>();
+        }
+    }
+
+    [System.Serializable]
+    public class ReadyMsg : NetworkHeader
+    {
+        public List<NetworkObject.NetworkPlayer> playerList;
+        public ReadyMsg()
+        {
+            command = Commands.READY;
+            playerList = new List<NetworkObject.NetworkPlayer>();
         }
     }
 }
