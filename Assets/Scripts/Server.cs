@@ -172,23 +172,14 @@ public class Server : MonoBehaviour
             case Commands.PLAYER_INPUT:
                 if (inGame)
                 {
-                    PlayerInputMsg playerInput = new PlayerInputMsg();
-                    GameObject jugadorInput = null;
-                    foreach (var jugador in jugadoresSimulados)
-                    {
-                        Debug.Log(jugador.gameObject.name == playerInput.playerInput.id + "(Clone)");
-                        
-                    }
-                    /*Debug.Log("Hor: " + playerInput.playerInput.horKey);
-                    Debug.Log("Ver: " + playerInput.playerInput.vertKey);
-                    */
-                    //Debug.Log(jugadorInput.gameObject.name);
-                    _direction = new Vector3(playerInput.playerInput.horKey, playerInput.playerInput.vertKey, 0f);
+                    PlayerInputMsg playerInput = JsonUtility.FromJson<PlayerInputMsg>(recMsg);
+                    GameObject jugadorInput = jugadoresSimulados[numJugador];
+                    _direction = new Vector3(playerInput.horKey, playerInput.vertKey, 0f);
                     if (jugadorInput != null)
                     {
                         jugadorInput.transform.Translate(_direction * speed * Time.deltaTime);
                         PlayerMovementMsg playerMovementMsg = new PlayerMovementMsg();
-                        playerMovementMsg.idJug = playerInput.playerInput.id;
+                        playerMovementMsg.idJug = playerInput.id;
                         playerMovementMsg.playerPos = jugadorInput.transform.position;
                         foreach (var connection in m_Connections)
                         {

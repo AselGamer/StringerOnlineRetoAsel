@@ -23,16 +23,6 @@ namespace NetworkObject
         public int colorJug;
         public string nombre;
     }
-
-    [System.Serializable]
-    public class NetworkPlayerInput : NetworkObject
-    {
-        public float vertKey;
-        public float horKey;
-
-        public byte shootKey;
-        public byte shoot2Key;
-    }
 }
 
 namespace NetworkMessages
@@ -98,11 +88,22 @@ namespace NetworkMessages
     [System.Serializable]
     public class PlayerInputMsg : NetworkHeader
     {
-        public NetworkObject.NetworkPlayerInput playerInput;
+        public string id;
+
+        public float vertKey;
+        public float horKey;
+
+        public byte shootKey;
+        public byte shoot2Key;
         public PlayerInputMsg()
         {
             command = Commands.PLAYER_INPUT;
-            playerInput = new NetworkObject.NetworkPlayerInput();
+            id = string.Empty;
+            vertKey = 0;
+            horKey = 0;
+            shootKey = 0;
+            shoot2Key = 0;
+
         }
     }
 

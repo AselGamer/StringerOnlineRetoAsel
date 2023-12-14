@@ -196,11 +196,14 @@ public class NetworkClient : MonoBehaviour
         simulatedPlayers.Clear();
     }
 
-    public void SendPlayerInput(NetworkObject.NetworkPlayerInput playerInput)
+    public void SendPlayerInput(PlayerInputMsg playerInput)
     {
-        PlayerInputMsg inputMsg = new PlayerInputMsg();
         playerInput.id = idPlayer;
-        inputMsg.playerInput = playerInput;
-        SendToServer(inputMsg);
+        if (playerInput.vertKey != 0 || playerInput.horKey != 0)
+        {
+            Debug.Log("Hor: " + playerInput.horKey);
+            Debug.Log("Ver: " + playerInput.vertKey);
+        }
+        SendToServer(playerInput);
     }
 }

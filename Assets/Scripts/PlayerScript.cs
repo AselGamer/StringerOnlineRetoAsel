@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NetworkMessages;
 
 
 public class PlayerScript : MonoBehaviour
@@ -12,25 +13,26 @@ public class PlayerScript : MonoBehaviour
         if (_client.inGame)
         {
             //Player movement
-            NetworkObject.NetworkPlayerInput playerInput = new NetworkObject.NetworkPlayerInput();
-            if (Input.GetKeyDown(KeyCode.A))
+            PlayerInputMsg playerInputMsg = new PlayerInputMsg();
+            if (Input.GetKey(KeyCode.A))
             {
-                playerInput.vertKey = 1;
+                playerInputMsg.horKey = -1;
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
-                playerInput.vertKey = -1;
+                playerInputMsg.horKey = 1;
             }
 
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKey(KeyCode.W))
             {
-                playerInput.horKey = 1;
+                playerInputMsg.vertKey = 1;
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (Input.GetKey(KeyCode.S))
             {
-                playerInput.horKey = -1;
+                playerInputMsg.vertKey = -1;
             }
-            _client.SendPlayerInput(playerInput);
+            
+            _client.SendPlayerInput(playerInputMsg);
         }
     }
 }
