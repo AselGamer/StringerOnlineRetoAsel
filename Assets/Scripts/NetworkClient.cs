@@ -22,6 +22,9 @@ public class NetworkClient : MonoBehaviour
     private bool conectar;
     private float offsetLobby = -100f;
 
+    //Public values
+    public bool inGame = false;
+
     //Inputs
     public InputField ipInput;
     public InputField nombreInput;
@@ -31,6 +34,7 @@ public class NetworkClient : MonoBehaviour
     //Canvas
     public Canvas connectCanvas;
     public Canvas waitCanvas;
+    public Canvas gameCanvas;
 
     //Prefabs
     public GameObject waitingPlayer;
@@ -105,7 +109,9 @@ public class NetworkClient : MonoBehaviour
 
     private void OnDisconnect()
     {
-        m_Connection = default(NetworkConnection);
+        //Too lazy to move this
+        // TODO: move this
+        Disconnect();
     }
 
     private void OnData(DataStreamReader stream)
@@ -126,8 +132,7 @@ public class NetworkClient : MonoBehaviour
                 break;
             case Commands.LOBBY:
                 offsetLobby = -100f;
-                simulatedPlayers.ForEach(player => Destroy(player));
-                simulatedPlayers.Clear();
+                ClearPlayers();
                 LobbyMsg lobbyMsg = JsonUtility.FromJson<LobbyMsg>(recMsg);
                 foreach (var player in lobbyMsg.players)
                 {
@@ -140,7 +145,13 @@ public class NetworkClient : MonoBehaviour
                 startButton.gameObject.SetActive(lobbyMsg.players.Count > 1);
                 break;
             case Commands.READY:
-
+                waitCanvas.gameObject.SetActive(false);
+                ClearPlayers();
+                gameCanvas.gameObject.SetActive(true);
+                inGame = true;
+                break;
+            case Commands.PLAYER_MOVEMENT:
+                // TODO: implement
                 break;
             default:
                 Debug.Log("Mensaje Desconocido");
@@ -163,12 +174,33 @@ public class NetworkClient : MonoBehaviour
         m_Driver.Disconnect(m_Connection);
         m_Driver.ScheduleUpdate().Complete();
         m_Connection = default(NetworkConnection);
-        simulatedPlayers.ForEach(player => Destroy(player));
-        simulatedPlayers.Clear();
+        ClearPlayers();
         conectar = false;
+        inGame = false;
         connectButton.enabled = true;
+        startButton.enabled = true;
         serverIp = "";
         connectCanvas.gameObject.SetActive(true);
         waitCanvas.gameObject.SetActive(false);
+    }
+
+    public void StartGame()
+    {
+        startButton.enabled = false;
+        SendToServer(new StartMsg());
+    }
+
+    private void ClearPlayers()
+    {
+        simulatedPlayers.ForEach(player => Destroy(player));
+        simulatedPlayers.Clear();
+    }
+
+    public void SendPlayerInput(NetworkObject.NetworkPlayerInput playerInput)
+    {
+        PlayerInputMsg inputMsg = new PlayerInputMsg();
+        playerInput.id = idPlayer;
+        inputMsg.playerInput = playerInput;
+        SendToServer(inputMsg);
     }
 }

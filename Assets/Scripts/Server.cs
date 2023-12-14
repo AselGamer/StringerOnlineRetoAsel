@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using NetworkMessages;
+using TMPro;
 
 public class Server : MonoBehaviour
 {
@@ -13,9 +14,21 @@ public class Server : MonoBehaviour
     public NativeList<NetworkConnection> m_Connections;
     public List<NetworkObject.NetworkPlayer> m_Players;
 
+    //Game simulation
+    public GameObject[] jugadoresSimulados;
+
+    //Prefabs
+    public GameObject jugadorPrefab;
+    public Canvas gameCanvas;
+    private const float SPAWN_POS = -265f;
+
+    //Player movement
+    public float speed;
+    public Vector3 _direction;
+
     //Private values
     private int nextId = 0;
-    private bool onLobby = false;
+    private bool inGame = false;
 
     void Start()
     {
@@ -104,17 +117,9 @@ public class Server : MonoBehaviour
 
     private void SendToClient(object message, NetworkConnection c)
     {
-        //Bottleneck might be necessary though
-        /*
-        if (!c.IsCreated)
-        {
-            return;
-        }
-        */
         string messageJSON =  JsonUtility.ToJson(message);
         DataStreamWriter writer;
         m_Driver.BeginSend(NetworkPipeline.Null, c, out writer);
-        Debug.Log(messageJSON);
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(messageJSON), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
@@ -132,14 +137,66 @@ public class Server : MonoBehaviour
             case Commands.HANDSHAKE:
                 HandshakeMsg handShakeRecibido = JsonUtility.FromJson<HandshakeMsg>(recMsg);
                 Debug.Log("se ha conectado: " + handShakeRecibido.player.nombre);
+                if (inGame)
+                {
+                    int lastConnection = m_Connections.Length - 1;
+                    m_Driver.Disconnect(m_Connections[lastConnection]);
+                    m_Driver.ScheduleUpdate().Complete();
+                    m_Connections[lastConnection] = default(NetworkConnection);
+                    Debug.Log("Partida en proceso desconectando jugador: " + handShakeRecibido.player.nombre);
+                    return;
+                }
 
                 NetworkObject.NetworkPlayer nuevoJugador = new NetworkObject.NetworkPlayer();
+                float vertOffset = (nextId - 1) * 100f;
                 nuevoJugador.id = handShakeRecibido.player.id;
                 nuevoJugador.nombre = handShakeRecibido.player.nombre;
+                nuevoJugador.posJugador = new Vector3(SPAWN_POS, vertOffset ,0f);
                 m_Players.Add(nuevoJugador);
                 SendPlayerLobby();
                 break;
-
+            case Commands.START:
+                if (inGame)
+                {
+                    return;
+                }
+                ReadyMsg readyMsg = new ReadyMsg();
+                readyMsg.playerList = m_Players;
+                foreach (var connection in m_Connections)
+                {
+                    SendToClient(readyMsg, connection);
+                }
+                inGame = true;
+                StartGameServer();
+                break;
+            case Commands.PLAYER_INPUT:
+                if (inGame)
+                {
+                    PlayerInputMsg playerInput = new PlayerInputMsg();
+                    GameObject jugadorInput = null;
+                    foreach (var jugador in jugadoresSimulados)
+                    {
+                        Debug.Log(jugador.gameObject.name == playerInput.playerInput.id + "(Clone)");
+                        
+                    }
+                    /*Debug.Log("Hor: " + playerInput.playerInput.horKey);
+                    Debug.Log("Ver: " + playerInput.playerInput.vertKey);
+                    */
+                    //Debug.Log(jugadorInput.gameObject.name);
+                    _direction = new Vector3(playerInput.playerInput.horKey, playerInput.playerInput.vertKey, 0f);
+                    if (jugadorInput != null)
+                    {
+                        jugadorInput.transform.Translate(_direction * speed * Time.deltaTime);
+                        PlayerMovementMsg playerMovementMsg = new PlayerMovementMsg();
+                        playerMovementMsg.idJug = playerInput.playerInput.id;
+                        playerMovementMsg.playerPos = jugadorInput.transform.position;
+                        foreach (var connection in m_Connections)
+                        {
+                            SendToClient(playerMovementMsg, connection);
+                        }
+                    }
+                }
+                break;
             default:
 
                 break;
@@ -167,7 +224,21 @@ public class Server : MonoBehaviour
                 SendToClient(lobbyMsg, connection);
             }            
         }
-        onLobby = true;
+    }
+
+    private void StartGameServer()
+    {
+        int playerCount = m_Players.Count;
+        System.Array.Resize(ref jugadoresSimulados, playerCount);
+        for (int i = 0; i < playerCount; i++)
+        {
+            jugadorPrefab.transform.position = m_Players[i].posJugador;
+            jugadorPrefab.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = m_Players[i].nombre;
+            jugadorPrefab.gameObject.name = m_Players[i].id;
+            jugadoresSimulados[i] = Instantiate(jugadorPrefab, gameCanvas.transform);
+            
+        }
+        Debug.Log("Partida Empezada");
     }
 
 }

@@ -23,6 +23,16 @@ namespace NetworkObject
         public int colorJug;
         public string nombre;
     }
+
+    [System.Serializable]
+    public class NetworkPlayerInput : NetworkObject
+    {
+        public float vertKey;
+        public float horKey;
+
+        public byte shootKey;
+        public byte shoot2Key;
+    }
 }
 
 namespace NetworkMessages
@@ -31,7 +41,10 @@ namespace NetworkMessages
     {
         HANDSHAKE,
         LOBBY,
-        READY
+        READY,
+        START,
+        PLAYER_INPUT,
+        PLAYER_MOVEMENT
     }
 
     [System.Serializable]
@@ -70,6 +83,39 @@ namespace NetworkMessages
         {
             command = Commands.READY;
             playerList = new List<NetworkObject.NetworkPlayer>();
+        }
+    }
+
+    [System.Serializable]
+    public class StartMsg : NetworkHeader
+    {
+        public StartMsg()
+        {
+            command = Commands.START;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerInputMsg : NetworkHeader
+    {
+        public NetworkObject.NetworkPlayerInput playerInput;
+        public PlayerInputMsg()
+        {
+            command = Commands.PLAYER_INPUT;
+            playerInput = new NetworkObject.NetworkPlayerInput();
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerMovementMsg : NetworkHeader
+    {
+        public string idJug;
+        public Vector3 playerPos;
+        public PlayerMovementMsg()
+        {
+            command = Commands.PLAYER_MOVEMENT;
+            idJug = string.Empty;
+            playerPos = new Vector3();
         }
     }
 }
