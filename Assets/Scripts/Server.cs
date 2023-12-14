@@ -5,6 +5,7 @@ using Unity.Networking.Transport;
 using Unity.Collections;
 using NetworkMessages;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Server : MonoBehaviour
 {
@@ -179,8 +180,10 @@ public class Server : MonoBehaviour
                     {
                         jugadorInput.transform.Translate(_direction * speed * Time.deltaTime);
                         PlayerMovementMsg playerMovementMsg = new PlayerMovementMsg();
-                        playerMovementMsg.idJug = playerInput.id;
-                        playerMovementMsg.playerPos = jugadorInput.transform.position;
+                        foreach (var jugador in jugadoresSimulados)
+                        {
+                            playerMovementMsg.playerList.Add(jugador.transform.position);
+                        }
                         foreach (var connection in m_Connections)
                         {
                             SendToClient(playerMovementMsg, connection);
@@ -227,7 +230,6 @@ public class Server : MonoBehaviour
             jugadorPrefab.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = m_Players[i].nombre;
             jugadorPrefab.gameObject.name = m_Players[i].id;
             jugadoresSimulados[i] = Instantiate(jugadorPrefab, gameCanvas.transform);
-            
         }
         Debug.Log("Partida Empezada");
     }

@@ -1,3 +1,4 @@
+using NetworkObject;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,13 +111,11 @@ namespace NetworkMessages
     [System.Serializable]
     public class PlayerMovementMsg : NetworkHeader
     {
-        public string idJug;
-        public Vector3 playerPos;
+        public List<Vector3> playerList;
         public PlayerMovementMsg()
         {
             command = Commands.PLAYER_MOVEMENT;
-            idJug = string.Empty;
-            playerPos = new Vector3();
+            playerList = new List<Vector3>();
         }
     }
 }

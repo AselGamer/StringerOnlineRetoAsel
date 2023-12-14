@@ -21,9 +21,11 @@ public class NetworkClient : MonoBehaviour
     private string playerName;
     private bool conectar;
     private float offsetLobby = -100f;
+    private const float SPAWN_POS = -265f;
 
     //Public values
     public bool inGame = false;
+    public GameObject[] simulatedPlayersGame;
 
     //Inputs
     public InputField ipInput;
@@ -38,6 +40,7 @@ public class NetworkClient : MonoBehaviour
 
     //Prefabs
     public GameObject waitingPlayer;
+    public GameObject gamePlayer;
 
     //Players In Lobby
     private List<GameObject> simulatedPlayers = new List<GameObject>();
@@ -147,11 +150,30 @@ public class NetworkClient : MonoBehaviour
             case Commands.READY:
                 waitCanvas.gameObject.SetActive(false);
                 ClearPlayers();
+                ReadyMsg readyMsg = JsonUtility.FromJson<ReadyMsg>(recMsg);
+                int playerCount = readyMsg.playerList.Count;
+                float vertOffset = 0f;
+                Array.Resize(ref simulatedPlayersGame, playerCount);
+                for (int i = 0; i < playerCount; i++)
+                {
+                    gamePlayer.transform.position = new Vector3(SPAWN_POS, vertOffset, 0f);
+                    gamePlayer.GetComponentInChildren<TextMeshProUGUI>().text = readyMsg.playerList[i].nombre;
+                    gamePlayer.GetComponentInChildren<SpriteRenderer>().sprite = arrayColorJug[i];
+                    gamePlayer.name = readyMsg.playerList[i].id;
+                    simulatedPlayersGame[i] = Instantiate(gamePlayer, gameCanvas.transform);
+                    vertOffset += 100f;
+                }
                 gameCanvas.gameObject.SetActive(true);
                 inGame = true;
                 break;
             case Commands.PLAYER_MOVEMENT:
                 // TODO: implement
+                PlayerMovementMsg playerMovementMsg = JsonUtility.FromJson<PlayerMovementMsg>(recMsg);
+                int simPlayerCount = playerMovementMsg.playerList.Count;
+                for (int i = 0; i < simPlayerCount; i++)
+                {
+                    simulatedPlayersGame[i].transform.position = playerMovementMsg.playerList[i];
+                }
                 break;
             default:
                 Debug.Log("Mensaje Desconocido");
@@ -199,11 +221,6 @@ public class NetworkClient : MonoBehaviour
     public void SendPlayerInput(PlayerInputMsg playerInput)
     {
         playerInput.id = idPlayer;
-        if (playerInput.vertKey != 0 || playerInput.horKey != 0)
-        {
-            Debug.Log("Hor: " + playerInput.horKey);
-            Debug.Log("Ver: " + playerInput.vertKey);
-        }
         SendToServer(playerInput);
     }
 }

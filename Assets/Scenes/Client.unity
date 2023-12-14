@@ -1527,6 +1527,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverIp: 127.0.0.1
   serverPort: 123
+  inGame: 0
+  simulatedPlayersGame: []
   ipInput: {fileID: 1931390433}
   nombreInput: {fileID: 756368375}
   connectButton: {fileID: 1488654203}
@@ -1535,6 +1537,7 @@ MonoBehaviour:
   waitCanvas: {fileID: 337857341}
   gameCanvas: {fileID: 1691120698}
   waitingPlayer: {fileID: 3554669297560523393, guid: 40ee85e917d708641a6d5df0346c9d7a, type: 3}
+  gamePlayer: {fileID: 3554669297560523393, guid: b0a9421405445e141a81f8d52b5a0bfa, type: 3}
   arrayColorJug:
   - {fileID: 2041496087, guid: 91926b2c73be6e8418f960e629d23c8d, type: 3}
   - {fileID: 2011200119, guid: 91926b2c73be6e8418f960e629d23c8d, type: 3}
