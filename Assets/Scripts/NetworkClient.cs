@@ -38,6 +38,9 @@ public class NetworkClient : MonoBehaviour
     public Canvas waitCanvas;
     public Canvas gameCanvas;
 
+    //Gamebackground
+    public GameObject gameBackground;
+
     //Prefabs
     public GameObject waitingPlayer;
     public GameObject gamePlayer;
@@ -167,13 +170,26 @@ public class NetworkClient : MonoBehaviour
                 inGame = true;
                 break;
             case Commands.PLAYER_MOVEMENT:
-                // TODO: implement
                 PlayerMovementMsg playerMovementMsg = JsonUtility.FromJson<PlayerMovementMsg>(recMsg);
                 int simPlayerCount = playerMovementMsg.playerList.Count;
                 for (int i = 0; i < simPlayerCount; i++)
                 {
                     simulatedPlayersGame[i].transform.position = playerMovementMsg.playerList[i];
                 }
+                break;
+            case Commands.SHOOT_BULLET1:
+                ShootBulletMsg shootMsg = JsonUtility.FromJson<ShootBulletMsg>(recMsg);
+                GameObject shootingPlayer = simulatedPlayersGame[shootMsg.shootingPlayer];
+                GameObject pooledObj = shootingPlayer.GetComponent<PlayerGameScript>().GetPooledObject();
+                if (pooledObj != null)
+                {
+                    pooledObj.transform.position = new Vector3(shootingPlayer.transform.position.x + 1.5f, shootingPlayer.transform.position.y);
+                    pooledObj.SetActive(true);
+                }
+                break;
+            case Commands.BACKGROUND_MOVEMENT:
+                BackgroundMovementMsg backgroundMovementMsg = JsonUtility.FromJson<BackgroundMovementMsg>(recMsg);
+                gameBackground.transform.localPosition = new Vector3(backgroundMovementMsg.backGroundPos[0], backgroundMovementMsg.backGroundPos[1]);
                 break;
             default:
                 Debug.Log("Mensaje Desconocido");

@@ -14,24 +14,34 @@ public class PlayerScript : MonoBehaviour
         {
             //Player movement
             PlayerInputMsg playerInputMsg = new PlayerInputMsg();
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.LeftArrow))
             {
                 playerInputMsg.horKey = -1;
             }
-            else if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.RightArrow))
             {
                 playerInputMsg.horKey = 1;
             }
 
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.UpArrow))
             {
                 playerInputMsg.vertKey = 1;
             }
-            else if (Input.GetKey(KeyCode.S))
+            else if (Input.GetKey(KeyCode.DownArrow))
             {
                 playerInputMsg.vertKey = -1;
             }
-            
+
+            if (Input.GetKeyUp(KeyCode.Z))
+            {
+                playerInputMsg.shootKey = 1;
+            }
+
+            if (Input.GetKey(KeyCode.X))
+            {
+                playerInputMsg.shootKey2 = 1;
+            }
+
             _client.SendPlayerInput(playerInputMsg);
         }
     }

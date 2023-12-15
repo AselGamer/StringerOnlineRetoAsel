@@ -17,6 +17,7 @@ public class Server : MonoBehaviour
 
     //Game simulation
     public GameObject[] jugadoresSimulados;
+    public GameObject gameBackground;
 
     //Prefabs
     public GameObject jugadorPrefab;
@@ -168,6 +169,7 @@ public class Server : MonoBehaviour
                     SendToClient(readyMsg, connection);
                 }
                 inGame = true;
+                gameBackground.SetActive(true);
                 StartGameServer();
                 break;
             case Commands.PLAYER_INPUT:
@@ -175,6 +177,7 @@ public class Server : MonoBehaviour
                 {
                     PlayerInputMsg playerInput = JsonUtility.FromJson<PlayerInputMsg>(recMsg);
                     GameObject jugadorInput = jugadoresSimulados[numJugador];
+                    bool shootBullet = false;
                     _direction = new Vector3(playerInput.horKey, playerInput.vertKey, 0f);
                     if (jugadorInput != null)
                     {
@@ -184,9 +187,25 @@ public class Server : MonoBehaviour
                         {
                             playerMovementMsg.playerList.Add(jugador.transform.position);
                         }
+                        if (playerInput.shootKey == 1)
+                        {
+                            GameObject pooledObj = jugadorInput.GetComponent<PlayerGameScript>().GetPooledObject();
+                            if (pooledObj != null)
+                            {
+                                pooledObj.transform.position = new Vector3(jugadorInput.transform.position.x + 1.5f, jugadorInput.transform.position.y);
+                                pooledObj.SetActive(true);
+                                shootBullet = true;
+                            }
+                        }
                         foreach (var connection in m_Connections)
                         {
                             SendToClient(playerMovementMsg, connection);
+                            if (shootBullet)
+                            {
+                                ShootBulletMsg shootMsg = new ShootBulletMsg();
+                                shootMsg.shootingPlayer = numJugador;
+                                SendToClient(shootMsg, connection);
+                            }
                         }
                     }
                 }
@@ -199,8 +218,6 @@ public class Server : MonoBehaviour
 
     private void SendPlayerLobby()
     {
-        //Could be summed up with a single for loop but this is more elegant
-        // TODO: turn this into a for loop
         List<NetworkObject.NetworkLobbyPlayer> lobbyPlayers = new List<NetworkObject.NetworkLobbyPlayer>();
         foreach (var player in m_Players)
         {
@@ -232,6 +249,16 @@ public class Server : MonoBehaviour
             jugadoresSimulados[i] = Instantiate(jugadorPrefab, gameCanvas.transform);
         }
         Debug.Log("Partida Empezada");
+    }
+
+    public void SendBackground(float[] posBack)
+    {
+        BackgroundMovementMsg backgroundMovementMsg = new BackgroundMovementMsg();
+        backgroundMovementMsg.backGroundPos = posBack;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(backgroundMovementMsg, connection);
+        }
     }
 
 }

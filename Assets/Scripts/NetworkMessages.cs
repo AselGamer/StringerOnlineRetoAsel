@@ -35,7 +35,10 @@ namespace NetworkMessages
         READY,
         START,
         PLAYER_INPUT,
-        PLAYER_MOVEMENT
+        PLAYER_MOVEMENT,
+        SHOOT_BULLET1,
+        SHOOT_BULLET2,
+        BACKGROUND_MOVEMENT
     }
 
     [System.Serializable]
@@ -95,16 +98,16 @@ namespace NetworkMessages
         public float horKey;
 
         public byte shootKey;
-        public byte shoot2Key;
+        public byte shootKey2;
         public PlayerInputMsg()
         {
             command = Commands.PLAYER_INPUT;
             id = string.Empty;
             vertKey = 0;
             horKey = 0;
-            shootKey = 0;
-            shoot2Key = 0;
 
+            shootKey = 0;
+            shootKey2 = 0;
         }
     }
 
@@ -116,6 +119,28 @@ namespace NetworkMessages
         {
             command = Commands.PLAYER_MOVEMENT;
             playerList = new List<Vector3>();
+        }
+    }
+
+    [System.Serializable]
+    public class BackgroundMovementMsg : NetworkHeader
+    {
+        public float[] backGroundPos;
+        public BackgroundMovementMsg()
+        {
+            command = Commands.BACKGROUND_MOVEMENT;
+            backGroundPos = new float[2];
+        }
+    }
+
+    [System.Serializable]
+    public class ShootBulletMsg : NetworkHeader
+    {
+        public int shootingPlayer;
+        public ShootBulletMsg()
+        {
+            command = Commands.SHOOT_BULLET1;
+            shootingPlayer = 0;
         }
     }
 }
