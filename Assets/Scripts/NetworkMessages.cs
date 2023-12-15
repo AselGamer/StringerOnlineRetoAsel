@@ -143,4 +143,15 @@ namespace NetworkMessages
             shootingPlayer = 0;
         }
     }
+
+    [System.Serializable]
+    public class ShootBullet2Msg : NetworkHeader
+    {
+        public int shootingPlayer;
+        public ShootBullet2Msg()
+        {
+            command = Commands.SHOOT_BULLET2;
+            shootingPlayer = 0;
+        }
+    }
 }

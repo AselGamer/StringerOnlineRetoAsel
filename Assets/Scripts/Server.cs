@@ -178,6 +178,7 @@ public class Server : MonoBehaviour
                     PlayerInputMsg playerInput = JsonUtility.FromJson<PlayerInputMsg>(recMsg);
                     GameObject jugadorInput = jugadoresSimulados[numJugador];
                     bool shootBullet = false;
+                    bool shootBullet2 = false;
                     _direction = new Vector3(playerInput.horKey, playerInput.vertKey, 0f);
                     if (jugadorInput != null)
                     {
@@ -197,12 +198,28 @@ public class Server : MonoBehaviour
                                 shootBullet = true;
                             }
                         }
+                        if (playerInput.shootKey2 == 1)
+                        {
+                            GameObject pooledObj = jugadorInput.GetComponent<PlayerGameScript>().GetPooledObjectHeart();
+                            if (pooledObj != null)
+                            {
+                                pooledObj.transform.position = new Vector3(jugadorInput.transform.position.x, jugadorInput.transform.position.y + 0.5f);
+                                pooledObj.SetActive(true);
+                                shootBullet2 = true;
+                            }
+                        }
                         foreach (var connection in m_Connections)
                         {
                             SendToClient(playerMovementMsg, connection);
                             if (shootBullet)
                             {
                                 ShootBulletMsg shootMsg = new ShootBulletMsg();
+                                shootMsg.shootingPlayer = numJugador;
+                                SendToClient(shootMsg, connection);
+                            }
+                            if (shootBullet2)
+                            {
+                                ShootBullet2Msg shootMsg = new ShootBullet2Msg();
                                 shootMsg.shootingPlayer = numJugador;
                                 SendToClient(shootMsg, connection);
                             }

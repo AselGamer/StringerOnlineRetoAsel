@@ -255,8 +255,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3858292159972256483, guid: 41af22abf8b750b4a9a45baa5ebc3bb6, type: 3}
+  heartPrefab: {fileID: 7526244543061494566, guid: 19bff1cf763899b48bec7b8d4ce537fa, type: 3}
   poolSize: 50
+  poolSize2: 5
   poolBullets: []
+  poolHearts: []
 --- !u!1 &6733637453579304867
 GameObject:
   m_ObjectHideFlags: 0

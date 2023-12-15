@@ -187,6 +187,16 @@ public class NetworkClient : MonoBehaviour
                     pooledObj.SetActive(true);
                 }
                 break;
+            case Commands.SHOOT_BULLET2:
+                ShootBullet2Msg shoot2Msg = JsonUtility.FromJson<ShootBullet2Msg>(recMsg);
+                GameObject shootingPlayer2 = simulatedPlayersGame[shoot2Msg.shootingPlayer];
+                GameObject pooledObj2 = shootingPlayer2.GetComponent<PlayerGameScript>().GetPooledObjectHeart();
+                if (pooledObj2 != null)
+                {
+                    pooledObj2.transform.position = new Vector3(shootingPlayer2.transform.position.x, shootingPlayer2.transform.position.y + 0.5f);
+                    pooledObj2.SetActive(true);
+                }
+                break;
             case Commands.BACKGROUND_MOVEMENT:
                 BackgroundMovementMsg backgroundMovementMsg = JsonUtility.FromJson<BackgroundMovementMsg>(recMsg);
                 gameBackground.transform.localPosition = new Vector3(backgroundMovementMsg.backGroundPos[0], backgroundMovementMsg.backGroundPos[1]);
