@@ -5,11 +5,18 @@ using UnityEngine;
 public class Enemigo1Script : MonoBehaviour
 {
     public float velocidad;
+    private Server _server;
+    public int idEnemigo;
+    public bool isServer;
 
     private SpriteRenderer miRenderer;
 
     void Start()
     {
+        if (isServer)
+        {
+            _server = GameObject.FindGameObjectWithTag("server").GetComponent<Server>();
+        }
         miRenderer = GetComponent<SpriteRenderer>();
     }
     void Update()
@@ -22,9 +29,21 @@ public class Enemigo1Script : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "bala")
+        switch (collider.tag)
         {
-            gameObject.SetActive(false);
+            case "bala":
+                if (_server != null)
+                {
+                    _server.SendEnemyDeath(collider.gameObject.GetComponent<BulletScript>().idJugSim);
+                }
+                collider.gameObject.SetActive(false);
+                gameObject.SetActive(false); 
+                break;
+            case "leftCol":
+                gameObject.SetActive(false);
+                break;
+            default:
+                break;
         }
     }
 }

@@ -26,6 +26,7 @@ public class NetworkClient : MonoBehaviour
     //Public values
     public bool inGame = false;
     public GameObject[] simulatedPlayersGame;
+    public EnemySpawnerScript enemySpawnerScript;
 
     //Inputs
     public InputField ipInput;
@@ -167,6 +168,7 @@ public class NetworkClient : MonoBehaviour
                     vertOffset += 100f;
                 }
                 gameCanvas.gameObject.SetActive(true);
+                enemySpawnerScript.findSpawners();
                 inGame = true;
                 break;
             case Commands.PLAYER_MOVEMENT:

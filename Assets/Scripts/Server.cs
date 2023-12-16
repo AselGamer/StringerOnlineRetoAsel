@@ -18,6 +18,7 @@ public class Server : MonoBehaviour
     //Game simulation
     public GameObject[] jugadoresSimulados;
     public GameObject gameBackground;
+    public EnemySpawnerScript enemySpawnerScript;
 
     //Prefabs
     public GameObject jugadorPrefab;
@@ -164,12 +165,13 @@ public class Server : MonoBehaviour
                 }
                 ReadyMsg readyMsg = new ReadyMsg();
                 readyMsg.playerList = m_Players;
-                foreach (var connection in m_Connections)
+                for (int i = 0; i < m_Connections.Length; i++)
                 {
-                    SendToClient(readyMsg, connection);
+                    SendToClient(readyMsg, m_Connections[i]);
                 }
                 inGame = true;
                 gameBackground.SetActive(true);
+                enemySpawnerScript.findSpawners();
                 StartGameServer();
                 break;
             case Commands.PLAYER_INPUT:
@@ -262,6 +264,7 @@ public class Server : MonoBehaviour
         {
             jugadorPrefab.transform.position = m_Players[i].posJugador;
             jugadorPrefab.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = m_Players[i].nombre;
+            jugadorPrefab.gameObject.GetComponent<PlayerGameScript>().idJugador = i;
             jugadorPrefab.gameObject.name = m_Players[i].id;
             jugadoresSimulados[i] = Instantiate(jugadorPrefab, gameCanvas.transform);
         }
@@ -276,6 +279,11 @@ public class Server : MonoBehaviour
         {
             SendToClient(backgroundMovementMsg, connection);
         }
+    }
+
+    public void SendEnemyDeath(int enemyKiller)
+    {
+        // Send Enemy death
     }
 
 }

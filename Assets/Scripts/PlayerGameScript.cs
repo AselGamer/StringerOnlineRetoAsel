@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerGameScript : MonoBehaviour
 {
+    public int idJugador;
+
     public GameObject bulletPrefab;
     public GameObject heartPrefab;
     public int poolSize;
@@ -19,6 +21,7 @@ public class PlayerGameScript : MonoBehaviour
         {
             tmp = Instantiate(bulletPrefab);
             tmp.SetActive(false);
+            tmp.GetComponent<BulletScript>().idJugSim = idJugador;
             poolBullets.Add(tmp);
         }
         for (int i = 0; i < poolSize2; i++)

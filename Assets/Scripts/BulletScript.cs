@@ -5,6 +5,7 @@ using UnityEngine;
 public class BulletScript : MonoBehaviour
 {
     public float velocidad;
+    public int idJugSim;
 
     private Transform miTransform;
 
@@ -22,7 +23,6 @@ public class BulletScript : MonoBehaviour
     {
         switch (collider.tag)
         {
-            case "rightCol":
             case "leftCol":
             case "botCol":
             case "topCol":

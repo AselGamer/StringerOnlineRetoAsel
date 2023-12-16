@@ -9,6 +9,8 @@ TagManager:
   - leftCol
   - rightCol
   - bala
+  - spawnEnemigo0
+  - server
   layers:
   - Default
   - TransparentFX

@@ -254,6 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d97c3df6b21b64dbb44a0e6d5495df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idJugador: 1
   bulletPrefab: {fileID: 3858292159972256483, guid: 41af22abf8b750b4a9a45baa5ebc3bb6, type: 3}
   heartPrefab: {fileID: 7526244543061494566, guid: 19bff1cf763899b48bec7b8d4ce537fa, type: 3}
   poolSize: 50
