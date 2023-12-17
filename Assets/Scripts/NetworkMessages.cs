@@ -45,7 +45,8 @@ namespace NetworkMessages
         PLAYER_MOVEMENT,
         SHOOT_BULLET1,
         SHOOT_BULLET2,
-        BACKGROUND_MOVEMENT
+        BACKGROUND_MOVEMENT,
+        UPDATE_POINTS
     }
 
     [System.Serializable]
@@ -161,6 +162,18 @@ namespace NetworkMessages
         {
             command = Commands.SHOOT_BULLET2;
             shootingPlayer = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class UpdatePointsMsg : NetworkHeader
+    {
+        public int points, playerToUpdate;
+        public UpdatePointsMsg()
+        {
+            command = Commands.UPDATE_POINTS;
+            points = 0;
+            playerToUpdate = 0;
         }
     }
 }

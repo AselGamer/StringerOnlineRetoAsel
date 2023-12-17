@@ -53,6 +53,10 @@ public class NetworkClient : MonoBehaviour
     //Player Color Array
     public Sprite[] arrayColorJug;
 
+    //Player Points
+    public List<GameObject> playerPoints;
+    public GameObject playerPointsPrefab;
+
 
     public void Conectar()
     {
@@ -166,9 +170,14 @@ public class NetworkClient : MonoBehaviour
                 }
                 int playerCount = readyMsg.playerList.Count;
                 float vertOffset = 0f;
+                float offsetPunts = -230f;
                 Array.Resize(ref simulatedPlayersGame, playerCount);
                 for (int i = 0; i < playerCount; i++)
                 {
+                    var tmpPrefab = playerPointsPrefab;
+                    tmpPrefab.transform.localPosition = new Vector3(offsetPunts, 150f);
+                    offsetPunts += 200f;
+                    playerPoints.Add(Instantiate(tmpPrefab ,gameCanvas.transform));
                     gamePlayer.transform.position = new Vector3(SPAWN_POS, vertOffset, 0f);
                     gamePlayer.GetComponentInChildren<TextMeshProUGUI>().text = readyMsg.playerList[i].nombre;
                     gamePlayer.GetComponentInChildren<SpriteRenderer>().sprite = arrayColorJug[i];
@@ -211,6 +220,10 @@ public class NetworkClient : MonoBehaviour
             case Commands.BACKGROUND_MOVEMENT:
                 BackgroundMovementMsg backgroundMovementMsg = JsonUtility.FromJson<BackgroundMovementMsg>(recMsg);
                 gameBackground.transform.localPosition = new Vector3(backgroundMovementMsg.backGroundPos[0], backgroundMovementMsg.backGroundPos[1]);
+                break;
+            case Commands.UPDATE_POINTS:
+                UpdatePointsMsg updatePointsMsg = JsonUtility.FromJson<UpdatePointsMsg>(recMsg);
+                playerPoints[updatePointsMsg.playerToUpdate].GetComponentInChildren<TextMeshPro>().text = updatePointsMsg.points+"";
                 break;
             default:
                 Debug.Log("Mensaje Desconocido");

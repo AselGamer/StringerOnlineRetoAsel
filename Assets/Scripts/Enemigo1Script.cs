@@ -8,6 +8,7 @@ public class Enemigo1Script : MonoBehaviour
     private Server _server;
     public int idEnemigo;
     public bool isServer;
+    public int puntosMatar;
 
     private SpriteRenderer miRenderer;
 
@@ -34,7 +35,7 @@ public class Enemigo1Script : MonoBehaviour
             case "bala":
                 if (_server != null)
                 {
-                    _server.SendEnemyDeath(collider.gameObject.GetComponent<BulletScript>().idJugSim);
+                    _server.UpdatePlayerPoints(collider.gameObject.GetComponent<BulletScript>().idJugSim, puntosMatar);
                 }
                 collider.gameObject.SetActive(false);
                 gameObject.SetActive(false); 

@@ -1717,6 +1717,7 @@ MonoBehaviour:
   gameCanvas: {fileID: 1619371854}
   speed: 3
   _direction: {x: 0, y: 0, z: 0}
+  puntos: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

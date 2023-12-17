@@ -27,8 +27,11 @@ public class NubeScript : MonoBehaviour
         {
             case "heart":
             case "bala":
-                collider.gameObject.SetActive(false);
-                SpawnBell();
+                if (!bellPrefab.activeInHierarchy)
+                {
+                    collider.gameObject.SetActive(false);
+                    SpawnBell();
+                }
                 break;
             case "leftCol":
                 gameObject.SetActive(false);
@@ -40,6 +43,7 @@ public class NubeScript : MonoBehaviour
 
     void SpawnBell()
     {
-        print("Nube hit");
+        bellPrefab.transform.parent = null;
+        bellPrefab.SetActive(true);
     }
 }

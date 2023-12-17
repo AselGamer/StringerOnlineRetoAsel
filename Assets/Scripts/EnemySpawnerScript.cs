@@ -57,7 +57,6 @@ public class EnemySpawnerScript : MonoBehaviour
         {
             if (p.GetComponent<SpriteRenderer>().isVisible)
             {
-                Debug.Log(p.tag);
                 var tmpEnemigo = GetPooledObject(p.tag);
                 tmpEnemigo.transform.localPosition= p.transform.localPosition;
                 tmpEnemigo.SetActive(true);

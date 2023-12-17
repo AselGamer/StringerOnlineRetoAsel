@@ -1778,6 +1778,8 @@ MonoBehaviour:
   - {fileID: 2041496087, guid: 91926b2c73be6e8418f960e629d23c8d, type: 3}
   - {fileID: 2011200119, guid: 91926b2c73be6e8418f960e629d23c8d, type: 3}
   - {fileID: -825639231, guid: 91926b2c73be6e8418f960e629d23c8d, type: 3}
+  playerPoints: []
+  playerPointsPrefab: {fileID: 8226756784298643860, guid: 79d9e866377ccc8418abcbd5f279d66a, type: 3}
 --- !u!4 &1266358657
 Transform:
   m_ObjectHideFlags: 0
@@ -2326,7 +2328,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

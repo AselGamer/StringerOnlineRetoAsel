@@ -33,6 +33,9 @@ public class Server : MonoBehaviour
     private int nextId = 0;
     private bool inGame = false;
 
+    //Points
+    public int[] puntos;
+
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -96,6 +99,11 @@ public class Server : MonoBehaviour
                 cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 
     void OnConnect(NetworkConnection c)
@@ -268,6 +276,7 @@ public class Server : MonoBehaviour
     {
         int playerCount = m_Players.Count;
         System.Array.Resize(ref jugadoresSimulados, playerCount);
+        System.Array.Resize(ref puntos, playerCount);
         for (int i = 0; i < playerCount; i++)
         {
             jugadorPrefab.transform.position = m_Players[i].posJugador;
@@ -289,9 +298,16 @@ public class Server : MonoBehaviour
         }
     }
 
-    public void SendEnemyDeath(int enemyKiller)
+    public void UpdatePlayerPoints(int playerNumber, int pointsToAdd)
     {
-        // Send Enemy death
+        puntos[playerNumber] += pointsToAdd;
+        UpdatePointsMsg updatePointsMsg = new UpdatePointsMsg();
+        updatePointsMsg.points = puntos[playerNumber];
+        updatePointsMsg.playerToUpdate = playerNumber;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(updatePointsMsg, connection);
+        }
     }
 
 }
