@@ -6,8 +6,9 @@ public class EnemySpawnerScript : MonoBehaviour
 {
     /*
      * Enemigo 0: Lechuga
-     * Enemgio 1: Rollo Primavera
-     * Enemigo 2: Calabaza
+     * Enemigo 1: Nube
+     * Enemgio 2: Rollo Primavera
+     * Enemigo 3: Calabaza
      */
     public GameObject[] prefabsEnemigos;
     public int poolSize;
@@ -24,15 +25,25 @@ public class EnemySpawnerScript : MonoBehaviour
         int cantPrefabs = prefabsEnemigos.Length;
         spawnPoints = new List<GameObject>();
         poolpoolEnemigos = new Dictionary<string, List<GameObject>>();
-        List<GameObject> tmpList = new List<GameObject>();
         enemiesId = 0;
         for (int i = 0; i < cantPrefabs; i++)
         {
+            List<GameObject> tmpList = new List<GameObject>();
             for (int j = 0; j < poolSize; j++)
             {
                 var tmp = Instantiate(prefabsEnemigos[i], mapaJuego);
                 tmpList.Add(tmp);
-                tmp.GetComponent<Enemigo1Script>().idEnemigo = enemiesId;
+                switch (i)
+                {
+                    case 1:
+                        enemiesId--;
+                        break;
+                    case 0:
+                        tmp.GetComponent<Enemigo1Script>().idEnemigo = enemiesId;
+                        break;
+                    default:
+                        break;
+                }
                 tmp.SetActive(false);
                 enemiesId++;
             }
@@ -46,6 +57,7 @@ public class EnemySpawnerScript : MonoBehaviour
         {
             if (p.GetComponent<SpriteRenderer>().isVisible)
             {
+                Debug.Log(p.tag);
                 var tmpEnemigo = GetPooledObject(p.tag);
                 tmpEnemigo.transform.localPosition= p.transform.localPosition;
                 tmpEnemigo.SetActive(true);

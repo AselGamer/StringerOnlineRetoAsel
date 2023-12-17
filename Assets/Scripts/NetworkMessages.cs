@@ -24,6 +24,13 @@ namespace NetworkObject
         public int colorJug;
         public string nombre;
     }
+
+    [System.Serializable]
+    public class NetworkSpawnPoint : NetworkObject
+    {
+        public float posX, posY;
+        public string tag;
+    }
 }
 
 namespace NetworkMessages
@@ -73,10 +80,12 @@ namespace NetworkMessages
     public class ReadyMsg : NetworkHeader
     {
         public List<NetworkObject.NetworkPlayer> playerList;
+        public List<NetworkSpawnPoint> spawnList;
         public ReadyMsg()
         {
             command = Commands.READY;
             playerList = new List<NetworkObject.NetworkPlayer>();
+            spawnList = new List<NetworkSpawnPoint>();
         }
     }
 

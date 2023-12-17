@@ -11,6 +11,8 @@ TagManager:
   - bala
   - spawnEnemigo0
   - server
+  - heart
+  - spawnEnemigo1
   layers:
   - Default
   - TransparentFX

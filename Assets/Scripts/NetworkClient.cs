@@ -27,6 +27,7 @@ public class NetworkClient : MonoBehaviour
     public bool inGame = false;
     public GameObject[] simulatedPlayersGame;
     public EnemySpawnerScript enemySpawnerScript;
+    public GameObject[] spawnPointEnemigos;
 
     //Inputs
     public InputField ipInput;
@@ -155,6 +156,14 @@ public class NetworkClient : MonoBehaviour
                 waitCanvas.gameObject.SetActive(false);
                 ClearPlayers();
                 ReadyMsg readyMsg = JsonUtility.FromJson<ReadyMsg>(recMsg);
+                foreach (var spawnPoint in readyMsg.spawnList)
+                {
+                    int tipoEnemigo = -1;
+                    int.TryParse(spawnPoint.tag[spawnPoint.tag.Length - 1]+"", out tipoEnemigo);
+                    var tmpSpawn = spawnPointEnemigos[tipoEnemigo];
+                    tmpSpawn.transform.localPosition = new Vector3(spawnPoint.posX, spawnPoint.posY);
+                    Instantiate(tmpSpawn, enemySpawnerScript.mapaJuego);
+                }
                 int playerCount = readyMsg.playerList.Count;
                 float vertOffset = 0f;
                 Array.Resize(ref simulatedPlayersGame, playerCount);

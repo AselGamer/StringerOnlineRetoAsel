@@ -165,13 +165,21 @@ public class Server : MonoBehaviour
                 }
                 ReadyMsg readyMsg = new ReadyMsg();
                 readyMsg.playerList = m_Players;
+                inGame = true;
+                gameBackground.SetActive(true);
+                enemySpawnerScript.findSpawners();
+                foreach (var spawnPoint in enemySpawnerScript.spawnPoints)
+                {
+                    var tmpPoint = new NetworkObject.NetworkSpawnPoint();
+                    tmpPoint.posX = spawnPoint.transform.localPosition.x;
+                    tmpPoint.posY = spawnPoint.transform.localPosition.y;
+                    tmpPoint.tag = spawnPoint.tag;
+                    readyMsg.spawnList.Add(tmpPoint);
+                }
                 for (int i = 0; i < m_Connections.Length; i++)
                 {
                     SendToClient(readyMsg, m_Connections[i]);
                 }
-                inGame = true;
-                gameBackground.SetActive(true);
-                enemySpawnerScript.findSpawners();
                 StartGameServer();
                 break;
             case Commands.PLAYER_INPUT:
