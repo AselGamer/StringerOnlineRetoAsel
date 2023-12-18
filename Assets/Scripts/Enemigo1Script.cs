@@ -11,6 +11,7 @@ public class Enemigo1Script : MonoBehaviour
     public int puntosMatar;
 
     private SpriteRenderer miRenderer;
+    private Animator miAnimator;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class Enemigo1Script : MonoBehaviour
             _server = GameObject.FindGameObjectWithTag("server").GetComponent<Server>();
         }
         miRenderer = GetComponent<SpriteRenderer>();
+        miAnimator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -38,7 +40,7 @@ public class Enemigo1Script : MonoBehaviour
                     _server.UpdatePlayerPoints(collider.gameObject.GetComponent<BulletScript>().idJugSim, puntosMatar);
                 }
                 collider.gameObject.SetActive(false);
-                gameObject.SetActive(false); 
+                miAnimator.SetBool("Morir", true);
                 break;
             case "leftCol":
                 gameObject.SetActive(false);
@@ -46,5 +48,11 @@ public class Enemigo1Script : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void Morir()
+    {
+        miAnimator.SetBool("Morir", false);
+        gameObject.SetActive(false);
     }
 }
