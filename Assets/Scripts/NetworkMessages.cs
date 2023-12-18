@@ -31,6 +31,22 @@ namespace NetworkObject
         public float posX, posY;
         public string tag;
     }
+
+    [System.Serializable]
+    public class NetworkBellPos : NetworkObject
+    {
+        public float posX, posY;
+        public int idCampana;
+        public int bellStage;
+        public bool isActive;
+    }
+
+    [System.Serializable]
+    public class NetworkDestroyProjectile : NetworkObject
+    {
+        public int idHitter;
+        public string hitterType;
+    }
 }
 
 namespace NetworkMessages
@@ -46,7 +62,9 @@ namespace NetworkMessages
         SHOOT_BULLET1,
         SHOOT_BULLET2,
         BACKGROUND_MOVEMENT,
-        UPDATE_POINTS
+        UPDATE_POINTS,
+        UPDATE_BELL,
+        DESTROY_PROJECTILE
     }
 
     [System.Serializable]
@@ -174,6 +192,28 @@ namespace NetworkMessages
             command = Commands.UPDATE_POINTS;
             points = 0;
             playerToUpdate = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class UpdateBellMsg : NetworkHeader
+    {
+        public NetworkBellPos networkBellPos;
+        public UpdateBellMsg()
+        {
+            command = Commands.UPDATE_BELL;
+            networkBellPos = new NetworkBellPos();
+        }
+    }
+
+    [System.Serializable]
+    public class DestroyProjectileMsg : NetworkHeader
+    {
+        public NetworkDestroyProjectile networkKillProjectile;
+        public DestroyProjectileMsg()
+        {
+            command = Commands.DESTROY_PROJECTILE;
+            networkKillProjectile = new NetworkDestroyProjectile();
         }
     }
 }

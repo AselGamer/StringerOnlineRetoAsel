@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c0de3bc873bf84398782d595734eee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idNube: 0
   velocidad: 0.5
   bellPrefab: {fileID: 3772822786517558620}
 --- !u!1001 &4238825019924474191
@@ -185,6 +186,10 @@ PrefabInstance:
     - target: {fileID: 1047252598157085715, guid: 9861ab065a8bc934f920ef781a41063e, type: 3}
       propertyPath: m_Name
       value: Camapana
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047252598157085715, guid: 9861ab065a8bc934f920ef781a41063e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8201117367516805093, guid: 9861ab065a8bc934f920ef781a41063e, type: 3}
       propertyPath: m_LocalPosition.x

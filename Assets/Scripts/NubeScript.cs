@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NubeScript : MonoBehaviour
 {
+    public int idNube;
     public float velocidad;
     public GameObject bellPrefab;
 
@@ -27,9 +28,9 @@ public class NubeScript : MonoBehaviour
         {
             case "heart":
             case "bala":
+                collider.gameObject.SetActive(false);
                 if (!bellPrefab.activeInHierarchy)
                 {
-                    collider.gameObject.SetActive(false);
                     SpawnBell();
                 }
                 break;
@@ -43,6 +44,7 @@ public class NubeScript : MonoBehaviour
 
     void SpawnBell()
     {
+        bellPrefab.GetComponent<BellScript>().idCampana = idNube;
         bellPrefab.transform.parent = null;
         bellPrefab.SetActive(true);
     }

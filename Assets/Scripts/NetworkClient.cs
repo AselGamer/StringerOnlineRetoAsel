@@ -225,6 +225,47 @@ public class NetworkClient : MonoBehaviour
                 UpdatePointsMsg updatePointsMsg = JsonUtility.FromJson<UpdatePointsMsg>(recMsg);
                 playerPoints[updatePointsMsg.playerToUpdate].GetComponentInChildren<TextMeshPro>().text = updatePointsMsg.points+"";
                 break;
+            case Commands.UPDATE_BELL:
+                UpdateBellMsg updateBellMsg = JsonUtility.FromJson<UpdateBellMsg>(recMsg);
+                GameObject[] campanasSimuladas = GameObject.FindGameObjectsWithTag("campana");
+                int campanasLength = campanasSimuladas.Length;
+                for (int i = 0; i < campanasLength; i++)
+                {
+                    int tmpIdCampana = campanasSimuladas[i].GetComponent<BellScript>().idCampana;
+                    if (tmpIdCampana == updateBellMsg.networkBellPos.idCampana)
+                    {
+                        campanasSimuladas[i].GetComponent<BellScript>().bellStage = updateBellMsg.networkBellPos.bellStage;
+                        campanasSimuladas[i].transform.position = new Vector3(updateBellMsg.networkBellPos.posX, updateBellMsg.networkBellPos.posY);
+                        campanasSimuladas[i].SetActive(updateBellMsg.networkBellPos.isActive);
+                    }
+                }
+                break;
+            case Commands.DESTROY_PROJECTILE:
+                DestroyProjectileMsg destroyProjectileMsg = JsonUtility.FromJson<DestroyProjectileMsg>(recMsg);
+                GameObject[] projectilesSimulados = GameObject.FindGameObjectsWithTag(destroyProjectileMsg.networkKillProjectile.hitterType);
+                int projectilesLength = projectilesSimulados.Length;
+                for (int i = 0; i < projectilesLength; i++)
+                {
+                    if (destroyProjectileMsg.networkKillProjectile.hitterType == "heart")
+                    {
+                        var tmpScript = projectilesSimulados[i].GetComponent<HeartScript>();
+                        if (projectilesSimulados[i].tag == destroyProjectileMsg.networkKillProjectile.hitterType && tmpScript.idHeart == destroyProjectileMsg.networkKillProjectile.idHitter)
+                        {
+                            projectilesSimulados[i].SetActive(false);
+                        }
+                    } 
+
+                    if(destroyProjectileMsg.networkKillProjectile.hitterType == "bala")
+                    {
+                        var tmpScript = projectilesSimulados[i].GetComponent<BulletScript>();
+                        if (projectilesSimulados[i].tag == destroyProjectileMsg.networkKillProjectile.hitterType && tmpScript.idBullet == destroyProjectileMsg.networkKillProjectile.idHitter)
+                        {
+                            projectilesSimulados[i].SetActive(false);
+                        }
+                    }
+                    
+                }
+                break;
             default:
                 Debug.Log("Mensaje Desconocido");
                 break;

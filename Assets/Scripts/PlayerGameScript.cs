@@ -13,6 +13,9 @@ public class PlayerGameScript : MonoBehaviour
     public List<GameObject> poolBullets;
     public List<GameObject> poolHearts;
 
+    private int bulletsId = 0;
+    private int heartsId = 0;
+
     void Start()
     {
         poolBullets = new List<GameObject>();
@@ -22,13 +25,17 @@ public class PlayerGameScript : MonoBehaviour
             tmp = Instantiate(bulletPrefab);
             tmp.SetActive(false);
             tmp.GetComponent<BulletScript>().idJugSim = idJugador;
+            tmp.GetComponent<BulletScript>().idBullet = bulletsId;
             poolBullets.Add(tmp);
+            bulletsId++;
         }
         for (int i = 0; i < poolSize2; i++)
         {
             tmp = Instantiate(heartPrefab);
             tmp.SetActive(false);
+            tmp.GetComponent<HeartScript>().idHeart = heartsId;
             poolHearts.Add(tmp);
+            heartsId++;
         }
     }
 

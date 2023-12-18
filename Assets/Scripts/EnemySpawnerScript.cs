@@ -36,7 +36,7 @@ public class EnemySpawnerScript : MonoBehaviour
                 switch (i)
                 {
                     case 1:
-                        enemiesId--;
+                        tmp.GetComponent<NubeScript>().idNube = enemiesId;
                         break;
                     case 0:
                         tmp.GetComponent<Enemigo1Script>().idEnemigo = enemiesId;

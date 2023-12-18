@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
+    public int idBullet;
+
     public float velocidad;
     public int idJugSim;
 

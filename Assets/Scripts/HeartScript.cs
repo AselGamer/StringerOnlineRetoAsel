@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class HeartScript : MonoBehaviour
 {
+    public int idHeart;
     public float velocidad;
-
+    
     private Transform miTransform;
 
     void Start()

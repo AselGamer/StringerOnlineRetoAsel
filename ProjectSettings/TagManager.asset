@@ -13,6 +13,8 @@ TagManager:
   - server
   - heart
   - spawnEnemigo1
+  - campana
+  - jugador
   layers:
   - Default
   - TransparentFX

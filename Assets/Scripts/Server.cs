@@ -101,11 +101,6 @@ public class Server : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
     void OnConnect(NetworkConnection c)
     {
         m_Connections.Add(c);
@@ -307,6 +302,33 @@ public class Server : MonoBehaviour
         foreach (var connection in m_Connections)
         {
             SendToClient(updatePointsMsg, connection);
+        }
+    }
+
+    public void SendBellPos(float bellPosX, float bellPosY, int idCampana, int bellStage, bool isActive)
+    {
+        UpdateBellMsg updateBellMsg = new UpdateBellMsg();
+        NetworkObject.NetworkBellPos tmpPos = new NetworkObject.NetworkBellPos();
+        tmpPos.posX = bellPosX;
+        tmpPos.posY = bellPosY;
+        tmpPos.idCampana = idCampana;
+        tmpPos.bellStage = bellStage;
+        tmpPos.isActive = isActive;
+        updateBellMsg.networkBellPos = tmpPos;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(updateBellMsg, connection);
+        }
+    }
+
+    public void DestroyPorjectile(int idHitter, string type)
+    {
+        DestroyProjectileMsg destroyProjectileMsg = new DestroyProjectileMsg();
+        destroyProjectileMsg.networkKillProjectile.idHitter = idHitter;
+        destroyProjectileMsg.networkKillProjectile.hitterType = type;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(destroyProjectileMsg, connection);
         }
     }
 
