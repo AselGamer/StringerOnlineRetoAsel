@@ -332,4 +332,44 @@ public class Server : MonoBehaviour
         }
     }
 
+    public void ReactivateSpawners()
+    {
+        enemySpawnerScript.ReactivateSpawners();
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(new RespawnEnemiesMsg(), connection);
+        }
+    }
+
+    public void SendCountDown(int countDown)
+    {
+        UpdateCountMsg countDownMsg = new UpdateCountMsg();
+        countDownMsg.count = countDown;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(countDownMsg, connection);
+        }
+    }
+
+    public void SendGameEnd()
+    {
+        GameEndMsg gameEndMsg = new GameEndMsg();
+        gameEndMsg.puntsArray = puntos;
+        List<NetworkObject.NetworkLobbyPlayer> lobbyPlayers = new List<NetworkObject.NetworkLobbyPlayer>();
+        foreach (var player in m_Players)
+        {
+            var lobbyPlayer = new NetworkObject.NetworkLobbyPlayer();
+            lobbyPlayer.nombre = player.nombre;
+            lobbyPlayer.colorJug = m_Players.IndexOf(player);
+            lobbyPlayers.Add(lobbyPlayer);
+        }
+        gameEndMsg.playerList = lobbyPlayers;
+        foreach (var connection in m_Connections)
+        {
+            SendToClient(gameEndMsg, connection);
+        }
+        inGame = false;
+        gameCanvas.gameObject.SetActive(false);
+    }
+
 }

@@ -64,7 +64,10 @@ namespace NetworkMessages
         BACKGROUND_MOVEMENT,
         UPDATE_POINTS,
         UPDATE_BELL,
-        DESTROY_PROJECTILE
+        DESTROY_PROJECTILE,
+        RESPAWN_ENEMIES,
+        UPDATE_COUNTDOWN,
+        GAME_END
     }
 
     [System.Serializable]
@@ -214,6 +217,39 @@ namespace NetworkMessages
         {
             command = Commands.DESTROY_PROJECTILE;
             networkKillProjectile = new NetworkDestroyProjectile();
+        }
+    }
+
+    [System.Serializable]
+    public class RespawnEnemiesMsg : NetworkHeader
+    {
+        public RespawnEnemiesMsg()
+        {
+            command = Commands.RESPAWN_ENEMIES;
+        }
+    }
+
+    [System.Serializable]
+    public class UpdateCountMsg : NetworkHeader
+    {
+        public int count;
+        public UpdateCountMsg()
+        {
+            command = Commands.UPDATE_COUNTDOWN; 
+            count = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class GameEndMsg : NetworkHeader
+    {
+        public int[] puntsArray;
+        public List<NetworkObject.NetworkLobbyPlayer> playerList;
+        public GameEndMsg()
+        { 
+            command = Commands.GAME_END;
+            puntsArray = new int[0];
+            playerList = new List<NetworkObject.NetworkLobbyPlayer>();
         }
     }
 }

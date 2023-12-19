@@ -59,15 +59,15 @@ public class BellScript : MonoBehaviour
                 if (_server != null)
                 {
                     int idJugador = collision.gameObject.GetComponent<PlayerGameScript>().idJugador;
-                    if (bellStage >= 0)
+                    if (bellStage >= 0 && bellStage <= 5)
                     {
                         _server.UpdatePlayerPoints(idJugador, 1000);
                     }
-                    else if (bellStage >= 5)
+                    else if (bellStage >= 5 && bellStage <= 10)
                     {
                         _server.UpdatePlayerPoints(idJugador, 1500);
                     }
-                    else if (bellStage >= 10)
+                    else if (bellStage >= 10 && bellStage <= 15)
                     {
                         _server.UpdatePlayerPoints(idJugador, 2000);
                     }
@@ -80,6 +80,11 @@ public class BellScript : MonoBehaviour
                 break;
             case "topCol":
                 //The original game doesen't prevent you from throwing this out of the level and neither will i
+                break;
+            case "botCol":
+                isActive = false;
+                gameObject.SetActive(false);
+                break;
             default:
                 break;
         }

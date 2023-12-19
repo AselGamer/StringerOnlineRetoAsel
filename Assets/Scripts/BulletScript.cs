@@ -25,6 +25,7 @@ public class BulletScript : MonoBehaviour
     {
         switch (collider.tag)
         {
+            case "rightCol":
             case "leftCol":
             case "botCol":
             case "topCol":

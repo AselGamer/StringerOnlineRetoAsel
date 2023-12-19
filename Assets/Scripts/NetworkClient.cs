@@ -20,6 +20,7 @@ public class NetworkClient : MonoBehaviour
     private string idPlayer;
     private string playerName;
     private bool conectar;
+    private bool gameOver = false;
     private float offsetLobby = -100f;
     private const float SPAWN_POS = -265f;
 
@@ -28,24 +29,28 @@ public class NetworkClient : MonoBehaviour
     public GameObject[] simulatedPlayersGame;
     public EnemySpawnerScript enemySpawnerScript;
     public GameObject[] spawnPointEnemigos;
+    public GameObject timeText;
+    public GameObject waitText;
 
     //Inputs
     public InputField ipInput;
     public InputField nombreInput;
     public Button connectButton;
     public Button startButton;
+    public Button disconnectButton;
 
     //Canvas
     public Canvas connectCanvas;
     public Canvas waitCanvas;
     public Canvas gameCanvas;
 
-    //Gamebackground
+    //Game Background
     public GameObject gameBackground;
 
     //Prefabs
     public GameObject waitingPlayer;
     public GameObject gamePlayer;
+    public GameObject gameOverPoints;
 
     //Players In Lobby
     private List<GameObject> simulatedPlayers = new List<GameObject>();
@@ -143,18 +148,21 @@ public class NetworkClient : MonoBehaviour
                 SendToServer(handshakeEnviar);
                 break;
             case Commands.LOBBY:
-                offsetLobby = -100f;
-                ClearPlayers();
-                LobbyMsg lobbyMsg = JsonUtility.FromJson<LobbyMsg>(recMsg);
-                foreach (var player in lobbyMsg.players)
+                if (!gameOver)
                 {
-                    waitingPlayer.GetComponentInChildren<TextMeshProUGUI>().text = player.nombre;
-                    waitingPlayer.GetComponentInChildren<SpriteRenderer>().sprite = arrayColorJug[player.colorJug];
-                    waitingPlayer.transform.position = new Vector3(offsetLobby, 0f);
-                    simulatedPlayers.Add(Instantiate(waitingPlayer, waitCanvas.transform));
-                    offsetLobby += 100f;
+                    offsetLobby = -100f;
+                    ClearPlayers();
+                    LobbyMsg lobbyMsg = JsonUtility.FromJson<LobbyMsg>(recMsg);
+                    foreach (var player in lobbyMsg.players)
+                    {
+                        waitingPlayer.GetComponentInChildren<TextMeshProUGUI>().text = player.nombre;
+                        waitingPlayer.GetComponentInChildren<SpriteRenderer>().sprite = arrayColorJug[player.colorJug];
+                        waitingPlayer.transform.position = new Vector3(offsetLobby, 0f);
+                        simulatedPlayers.Add(Instantiate(waitingPlayer, waitCanvas.transform));
+                        offsetLobby += 100f;
+                    }
+                    startButton.gameObject.SetActive(lobbyMsg.players.Count > 1);
                 }
-                startButton.gameObject.SetActive(lobbyMsg.players.Count > 1);
                 break;
             case Commands.READY:
                 waitCanvas.gameObject.SetActive(false);
@@ -265,6 +273,37 @@ public class NetworkClient : MonoBehaviour
                     }
                     
                 }
+                break;
+            case Commands.RESPAWN_ENEMIES:
+                enemySpawnerScript.ReactivateSpawners();
+                break;
+            case Commands.UPDATE_COUNTDOWN:
+                UpdateCountMsg updateCountMsg = JsonUtility.FromJson<UpdateCountMsg>(recMsg);
+                timeText.GetComponent<TextMeshProUGUI>().text = updateCountMsg.count + "";
+                break;
+            case Commands.GAME_END:
+                inGame = false;
+                gameOver = true;
+                GameEndMsg gameEndMsg = JsonUtility.FromJson<GameEndMsg>(recMsg);
+                gameCanvas.gameObject.SetActive(false);
+                waitText.gameObject.GetComponent<TextMeshProUGUI>().text = "Game Over";
+                int playerListSize = gameEndMsg.playerList.Count;
+                offsetLobby = -100;
+                for (int i = 0; i < playerListSize; i++)
+                {
+                    var tmpPointsText = gameOverPoints;
+                    waitingPlayer.GetComponentInChildren<TextMeshProUGUI>().text = gameEndMsg.playerList[i].nombre;
+                    waitingPlayer.GetComponentInChildren<SpriteRenderer>().sprite = arrayColorJug[gameEndMsg.playerList[i].colorJug];
+                    waitingPlayer.transform.position = new Vector3(offsetLobby, 0f);
+                    tmpPointsText.transform.position = new Vector3(offsetLobby + 90, -50f);
+                    tmpPointsText.GetComponentInChildren<TextMeshProUGUI>().text = gameEndMsg.puntsArray[i]+"";
+                    simulatedPlayers.Add(Instantiate(waitingPlayer, waitCanvas.transform));
+                    Instantiate(tmpPointsText, waitCanvas.transform);
+                    offsetLobby += 100f;
+                }
+                waitCanvas.gameObject.SetActive(true);
+                startButton.gameObject.SetActive(false);
+                disconnectButton.gameObject.SetActive(false);
                 break;
             default:
                 Debug.Log("Mensaje Desconocido");

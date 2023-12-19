@@ -18,7 +18,12 @@ public class BackGroundScript : MonoBehaviour
     
     void Update()
     {
-        miTransform.Translate(Vector3.right * velocidad * Time.deltaTime);
+        if (miTransform.localPosition.x <= -724f)
+        {
+            miTransform.localPosition = new Vector3(729f, miTransform.localPosition.y);
+            _server.ReactivateSpawners();
+        }
+        miTransform.Translate(Vector3.right * -velocidad * Time.deltaTime);
         arrPos[0] = miTransform.localPosition.x;
         arrPos[1] = miTransform.localPosition.y;
         _server.SendBackground(arrPos);

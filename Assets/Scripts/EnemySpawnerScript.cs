@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class EnemySpawnerScript : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class EnemySpawnerScript : MonoBehaviour
                 {
                     case 1:
                         tmp.GetComponent<NubeScript>().idNube = enemiesId;
+                        tmp.GetComponent<NubeScript>().hasBell = true;
                         break;
                     case 0:
                         tmp.GetComponent<Enemigo1Script>().idEnemigo = enemiesId;
@@ -58,9 +60,16 @@ public class EnemySpawnerScript : MonoBehaviour
             if (p.GetComponent<SpriteRenderer>().isVisible)
             {
                 var tmpEnemigo = GetPooledObject(p.tag);
-                tmpEnemigo.transform.localPosition= p.transform.localPosition;
-                tmpEnemigo.SetActive(true);
-                p.SetActive(false);
+                if (tmpEnemigo != null)
+                {
+                    tmpEnemigo.transform.localPosition = p.transform.localPosition;
+                    if (p.tag == "spawnEnemigo1")
+                    {
+                        tmpEnemigo.GetComponent<NubeScript>().hasBell = true;
+                    }
+                    tmpEnemigo.SetActive(true);
+                    p.SetActive(false);
+                }
             }
         }
     }
@@ -85,6 +94,14 @@ public class EnemySpawnerScript : MonoBehaviour
         for (int i = 0; i < cantPrefabs; i++)
         {
             spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnEnemigo" + i));
+        }
+    }
+
+    public void ReactivateSpawners()
+    {
+        foreach (var spawner in spawnPoints)
+        {
+            spawner.SetActive(true);
         }
     }
 

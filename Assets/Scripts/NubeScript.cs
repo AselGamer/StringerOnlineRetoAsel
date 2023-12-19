@@ -7,11 +7,13 @@ public class NubeScript : MonoBehaviour
     public int idNube;
     public float velocidad;
     public GameObject bellPrefab;
+    public bool hasBell;
 
     private SpriteRenderer miRenderer;
 
     void Start()
     {
+        hasBell = true;
         miRenderer = GetComponent<SpriteRenderer>();
     }
     void Update()
@@ -28,10 +30,13 @@ public class NubeScript : MonoBehaviour
         {
             case "heart":
             case "bala":
-                collider.gameObject.SetActive(false);
-                if (!bellPrefab.activeInHierarchy)
+                if (hasBell)
                 {
-                    SpawnBell();
+                    collider.gameObject.SetActive(false);
+                    if (!bellPrefab.activeInHierarchy)
+                    {
+                        SpawnBell();
+                    }
                 }
                 break;
             case "leftCol":
@@ -45,7 +50,11 @@ public class NubeScript : MonoBehaviour
     void SpawnBell()
     {
         bellPrefab.GetComponent<BellScript>().idCampana = idNube;
+        bellPrefab.GetComponent<BellScript>().isActive = true;
+        bellPrefab.GetComponent<BellScript>().bellStage = 0;
         bellPrefab.transform.parent = null;
+        bellPrefab.transform.position = gameObject.transform.position;
         bellPrefab.SetActive(true);
+        hasBell = false;
     }
 }
