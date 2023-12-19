@@ -732,6 +732,7 @@ GameObject:
   - component: {fileID: 971530162}
   - component: {fileID: 971530163}
   - component: {fileID: 971530164}
+  - component: {fileID: 971530165}
   m_Layer: 0
   m_Name: Mapa
   m_TagString: Untagged
@@ -766,6 +767,7 @@ Transform:
   - {fileID: 1162162287}
   - {fileID: 996517924}
   - {fileID: 1260801262}
+  - {fileID: 1378866438}
   - {fileID: 1728073905}
   m_Father: {fileID: 1619371855}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -835,6 +837,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidad: 1
   _server: {fileID: 2074785758}
+--- !u!210 &971530165
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971530161}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -1
+  m_SortAtRoot: 0
 --- !u!1001 &996517923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1197,6 +1211,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7706220072665887705, guid: 16174f3ab1deb0d45941d4b68f0e87b5, type: 3}
   m_PrefabInstance: {fileID: 1359128663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1378866437
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 971530162}
+    m_Modifications:
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6781474685491935000, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+      propertyPath: m_Name
+      value: SpawnPointEnemigo2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+--- !u!4 &1378866438 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1558874117160727418, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
+  m_PrefabInstance: {fileID: 1378866437}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1619371851
 GameObject:
@@ -1616,6 +1692,7 @@ MonoBehaviour:
   prefabsEnemigos:
   - {fileID: 6918766988394714467, guid: 5a2d97b4c09f6bf4d83121b2e2934a0a, type: 3}
   - {fileID: 8952042327537400309, guid: a7817873b72552d4187ffbb486444612, type: 3}
+  - {fileID: 4009603442320229703, guid: 433863ed420214142aefffe1f6feab3a, type: 3}
   poolSize: 10
   mapaJuego: {fileID: 971530162}
   spawnPoints: []

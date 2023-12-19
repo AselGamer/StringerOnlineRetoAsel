@@ -1652,6 +1652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1021160832}
   - component: {fileID: 1021160833}
+  - component: {fileID: 1021160834}
   m_Layer: 0
   m_Name: Mapa
   m_TagString: Untagged
@@ -1726,6 +1727,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!210 &1021160834
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021160831}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -1
+  m_SortAtRoot: 0
 --- !u!1 &1057306388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,6 +1911,7 @@ MonoBehaviour:
   spawnPointEnemigos:
   - {fileID: 4257697453459696586, guid: 16174f3ab1deb0d45941d4b68f0e87b5, type: 3}
   - {fileID: 8025737840148004643, guid: ac20bf7fb0ea6af469fa5a7c758d3668, type: 3}
+  - {fileID: 6781474685491935000, guid: d9da583fe13c8964d9f209f81d525034, type: 3}
   timeText: {fileID: 409167866}
   waitText: {fileID: 1057306388}
   ipInput: {fileID: 1931390433}
@@ -2084,6 +2098,7 @@ MonoBehaviour:
   prefabsEnemigos:
   - {fileID: 6918766988394714467, guid: 331396712348a014c802ebe9859a89a8, type: 3}
   - {fileID: 8952042327537400309, guid: a7817873b72552d4187ffbb486444612, type: 3}
+  - {fileID: 66534042972878846, guid: 433a2081b0322854caae691397dabff3, type: 3}
   poolSize: 10
   mapaJuego: {fileID: 1021160832}
   spawnPoints: []

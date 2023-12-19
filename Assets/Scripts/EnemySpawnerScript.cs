@@ -36,6 +36,14 @@ public class EnemySpawnerScript : MonoBehaviour
                 tmpList.Add(tmp);
                 switch (i)
                 {
+                    case 2:
+                        foreach (Transform tmpChild in tmp.transform)
+                        {
+                            tmpChild.gameObject.GetComponent<Enemigo2Script>().idEnemigo = enemiesId;
+                            enemiesId++;
+                        }
+                        enemiesId--;
+                        break;
                     case 1:
                         tmp.GetComponent<NubeScript>().idNube = enemiesId;
                         tmp.GetComponent<NubeScript>().hasBell = true;
@@ -66,6 +74,14 @@ public class EnemySpawnerScript : MonoBehaviour
                     if (p.tag == "spawnEnemigo1")
                     {
                         tmpEnemigo.GetComponent<NubeScript>().hasBell = true;
+                    }
+                    if (p.tag == "spawnEnemigo0")
+                    {
+                        tmpEnemigo.GetComponent<BoxCollider2D>().enabled = true;
+                    }
+                    if (p.tag == "spawnEnemigo2")
+                    {
+                        tmpEnemigo.GetComponentInChildren<BoxCollider2D>().enabled = true;
                     }
                     tmpEnemigo.SetActive(true);
                     p.SetActive(false);

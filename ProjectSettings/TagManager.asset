@@ -15,6 +15,7 @@ TagManager:
   - spawnEnemigo1
   - campana
   - jugador
+  - spawnEnemigo2
   layers:
   - Default
   - TransparentFX

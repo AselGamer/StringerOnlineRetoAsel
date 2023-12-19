@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemigo1Script : MonoBehaviour
+public class Enemigo2Script : MonoBehaviour
 {
     public float velocidad;
     private Server _server;
@@ -12,6 +12,7 @@ public class Enemigo1Script : MonoBehaviour
 
     private SpriteRenderer miRenderer;
     private Animator miAnimator;
+    private Vector3 _move;
 
     void Start()
     {
@@ -19,14 +20,16 @@ public class Enemigo1Script : MonoBehaviour
         {
             _server = GameObject.FindGameObjectWithTag("server").GetComponent<Server>();
         }
+        _move = Vector3.left + Vector3.up;
         miRenderer = GetComponent<SpriteRenderer>();
         miAnimator = GetComponent<Animator>();
     }
+
     void Update()
     {
         if (miRenderer.isVisible)
         {
-            transform.Translate(Vector3.left * velocidad * Time.deltaTime);
+            transform.Translate(_move * velocidad * Time.deltaTime);
         }
     }
 
@@ -43,6 +46,7 @@ public class Enemigo1Script : MonoBehaviour
                 collider.gameObject.SetActive(false);
                 miAnimator.SetBool("Morir", true);
                 break;
+            case "topCol":
             case "leftCol":
                 gameObject.SetActive(false);
                 break;
