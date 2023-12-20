@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class EnemySpawnerScript : MonoBehaviour
 {
@@ -40,6 +39,7 @@ public class EnemySpawnerScript : MonoBehaviour
                         foreach (Transform tmpChild in tmp.transform)
                         {
                             tmpChild.gameObject.GetComponent<Enemigo2Script>().idEnemigo = enemiesId;
+                            tmpChild.gameObject.GetComponent<Enemigo2Script>().posOriginal = tmpChild.localPosition;
                             enemiesId++;
                         }
                         enemiesId--;
@@ -81,7 +81,13 @@ public class EnemySpawnerScript : MonoBehaviour
                     }
                     if (p.tag == "spawnEnemigo2")
                     {
-                        tmpEnemigo.GetComponentInChildren<BoxCollider2D>().enabled = true;
+                        foreach(Transform t in tmpEnemigo.transform)
+                        {
+                            t.gameObject.SetActive(true);
+                            t.localPosition = t.GetComponent<Enemigo2Script>().posOriginal;
+                            t.GetComponent<BoxCollider2D>().enabled = true;
+                            t.GetComponent<Enemigo2Script>().isKilled = false;
+                        }
                     }
                     tmpEnemigo.SetActive(true);
                     p.SetActive(false);

@@ -9,10 +9,13 @@ public class Enemigo2Script : MonoBehaviour
     public int idEnemigo;
     public bool isServer;
     public int puntosMatar;
+    public bool isKilled;
 
     private SpriteRenderer miRenderer;
     private Animator miAnimator;
     private Vector3 _move;
+
+    public Vector3 posOriginal;
 
     void Start()
     {
@@ -20,9 +23,11 @@ public class Enemigo2Script : MonoBehaviour
         {
             _server = GameObject.FindGameObjectWithTag("server").GetComponent<Server>();
         }
-        _move = Vector3.left + Vector3.up;
+        isKilled = false;
         miRenderer = GetComponent<SpriteRenderer>();
         miAnimator = GetComponent<Animator>();
+        _move = Vector3.left + Vector3.up;
+        
     }
 
     void Update()
@@ -38,17 +43,19 @@ public class Enemigo2Script : MonoBehaviour
         switch (collider.tag)
         {
             case "bala":
-                GetComponent<BoxCollider2D>().enabled = false;
-                if (_server != null)
+                if (_server != null && !isKilled)
                 {
                     _server.UpdatePlayerPoints(collider.gameObject.GetComponent<BulletScript>().idJugSim, puntosMatar);
                 }
+                isKilled = true;
                 collider.gameObject.SetActive(false);
                 miAnimator.SetBool("Morir", true);
                 break;
             case "topCol":
             case "leftCol":
+                miAnimator.SetBool("Morir", false);
                 gameObject.SetActive(false);
+                CheckLastGroupObject();
                 break;
             default:
                 break;
@@ -59,5 +66,18 @@ public class Enemigo2Script : MonoBehaviour
     {
         miAnimator.SetBool("Morir", false);
         gameObject.SetActive(false);
+        CheckLastGroupObject();
+    }
+
+    private void CheckLastGroupObject()
+    {
+        foreach (Transform groupChild in transform.parent)
+        {
+            if (groupChild.gameObject.activeSelf)
+            {
+                return;
+            }
+        }
+        transform.parent.gameObject.SetActive(false);
     }
 }
